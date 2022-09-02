@@ -1,0 +1,14 @@
+.login-contianer {
+  height: 100vh;
+  background: #282c34;
+}
+.input-login {
+  background: initial;
+  padding: 1rem;
+  color: #ffffff;
+}
+
+.input-login:focus {
+  background: #50555e;
+  color: #ffffff;
+}
