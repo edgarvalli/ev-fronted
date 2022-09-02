@@ -1,5 +1,7 @@
 import React from "react";
-import { Container, ListGroup, Navbar } from "react-bootstrap";
+import { Container, Form, ListGroup, Navbar } from "react-bootstrap";
+import { BsFilter } from "react-icons/bs";
+import { FiMenu } from "react-icons/fi";
 import Client from "../interfaces/Client";
 import request from "../utils/requests";
 import ResponseHttp from "../interfaces/ResponseHttp";
@@ -11,18 +13,37 @@ class Clients extends React.Component<RouterProps> {
     darkMode: false,
   };
 
+  waitEvent: any = null;
+
   componentDidMount() {
     request.get("/api/clients").then((response: ResponseHttp) => {
       this.setState({ clients: response.data });
     });
   }
 
+  searchClients = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const val = ev.currentTarget.value;
+    clearTimeout(this.waitEvent);
+    this.waitEvent = setTimeout(() => {
+      const uri = `/api/clients?$filter=name eq '*${val}*'`;
+      request.get(uri).then((response: ResponseHttp) => {
+        this.setState({ clients: response.data });
+      });
+    }, 500);
+  };
+
   render(): React.ReactNode {
     return (
       <>
         <Navbar expand="lg" className="p-2">
-          <Navbar.Toggle></Navbar.Toggle>
-          <Navbar.Brand>EvCRM</Navbar.Brand>
+          <FiMenu size={30} />
+          <div style={{ width: "70%" }}>
+            <Form.Control
+              placeholder="Buscar Cliente"
+              onChange={this.searchClients}
+            />
+          </div>
+          <BsFilter size={30} />
         </Navbar>
         <Container>
           <ListGroup>
